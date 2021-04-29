@@ -17,6 +17,10 @@ class Appearance : public QMainWindow{
 
 public:
     Appearance(QWidget *parent=0);
+
+private slots:
+    void circlePenColor();
+
 private:
     void createMenus();
     void createTools();
@@ -24,10 +28,18 @@ private:
     ScribbleArea *scribbleArea;
 
     QMenu *file;
+    QMenu *optionMenu;
     QAction *quit;
+    QAction *clearScreenAct;
+    QAction *circlePenColorAct;
+    QAction *circleBrushAct;
+    QAction *circleWidthAct;
+    QAction *arrowPenColorAct;
+    QAction *arrowWidthAct;
     QToolBar *toolbar;
     QPushButton *circle;
     QPushButton *arrow;
+    QPushButton *deleteBut;
 
 
 };

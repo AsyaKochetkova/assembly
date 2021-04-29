@@ -24,9 +24,13 @@ ScribbleArea::ScribbleArea(QWidget *parent)
     myPenWidth = 1;
     myPenColor = Qt::blue;
 
+    myCirclePenColor= Qt::yellow;
+
     ifCircle = false;
     ifArrow = false;
 
+    numCurArrow=-1;
+    numCurCircle=-1;
 
     std::vector<int> circleParametrs;
 }
@@ -82,6 +86,34 @@ void ScribbleArea::clearImage()
     image.fill(qRgb(255, 255, 255));
     modified = true;
     update();
+}
+
+void ScribbleArea::clearScreen(){
+    clearImage();
+
+    int size = listArrows.size();
+    for(int i=size-1; i>=0; i--){
+        listArrows.erase(listArrows.begin()+i);
+    }
+
+    size = listCircles.size();
+        for(int i=size-1; i>=0; i--){
+            listCircles.erase(listCircles.begin()+i);
+        }
+
+     size = listRect.size();
+     if (size>0){
+        listRect.erase(listRect.begin());
+     }
+
+     QFile file(QDir::currentPath()+"/text.txt");
+     file.open(QIODevice::WriteOnly);
+     file.close();
+
+     numCurCircle = -1;
+     numCurArrow = -1;
+
+
 }
 
 // If a mouse button is pressed check if it was the
@@ -259,6 +291,18 @@ void ScribbleArea::clickedArrowButton(){
 
 }
 
+void ScribbleArea::clickedDeleteButton(){
+    deleteObject();
+}
+
+void ScribbleArea::deleteObject(){
+    if (ifMarkCircle()) {
+        listCircles.erase(listCircles.begin() + numCurCircle);
+        listRect.erase(listRect.begin());
+    }
+     redraw();
+}
+
 void ScribbleArea::markCircle(const std::vector<int> &parametrs){
     //QPainter painter(&image);
     //painter.setPen(QPen(Qt::black, myPenWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
@@ -297,7 +341,7 @@ void ScribbleArea::redraw(){
         painter.drawLine(listArrows[i].first,listArrows[i].second);
     }
 
-    painter.setPen(QPen(myPenColor, myPenWidth+1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    painter.setPen(QPen(myCirclePenColor, myPenWidth+1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter.setBrush(QBrush (Qt::white));
     size = listCircles.size();
     for(int i=0; i<size; i++){
@@ -355,6 +399,7 @@ bool ScribbleArea::ifMarkCircle(){
 
 void ScribbleArea::disMarkCircle(){
     listRect.erase(listRect.begin());
+    numCurCircle=-1;
     redraw();
 }
 
@@ -395,4 +440,9 @@ void ScribbleArea::addBeginPointArrow(){
 
 void ScribbleArea::addEndPointArrow(const QPoint &endPoint){
     listArrows[numCurArrow].second = endPoint;
+}
+
+void ScribbleArea::setCirclePenColor(const QColor &newColor)
+{
+    myCirclePenColor = newColor;
 }

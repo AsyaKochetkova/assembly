@@ -17,19 +17,24 @@ public:
 
     bool openImage(const QString &fileName);
     bool saveImage(const QString &fileName, const char *fileFormat);
+    void setCirclePenColor(const QColor &newColor);
     void setPenColor(const QColor &newColor);
     void setPenWidth(int newWidth);
 
+
+
     bool isModified() const { return modified; }
+    QColor circlePenColor() const { return myCirclePenColor;}
     QColor penColor() const { return myPenColor; }
     int penWidth() const { return myPenWidth; }
 
 public slots:
 
-    void clearImage();
+    void clearScreen();
     void print();
     void clickedCircleButton();
     void clickedArrowButton();
+    void clickedDeleteButton();
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;
@@ -48,6 +53,7 @@ private:
     void redraw();
     void disMarkCircle();
 
+    void clearImage();
     void changeSizeCircle(const QPoint &endPoint);
     void changePosCircle(const QPoint &endPoint);
     void addBeginPointArrow();
@@ -55,6 +61,8 @@ private:
     std::vector<int> ifEmptyCircle(const QPoint &endPoint);
     int numCurCircle;
     int numCurArrow;
+
+    void deleteObject();
     std::vector<std::pair<QPoint,int>> listCircles;
     std::vector<std::pair<QPoint,int>> listRect;
     std::vector<std::pair<QPoint,QPoint>> listArrows;
@@ -70,6 +78,8 @@ private:
 
     int myPenWidth;
     QColor myPenColor;
+
+    QColor myCirclePenColor;
 
     QImage image;
 
